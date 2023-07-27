@@ -1,0 +1,198 @@
+
+<?php
+if (isset($_POST['submit'])) {
+
+
+    $sql = "insert into page (`";
+    foreach ($_FILES as $a => $b) {
+        if ($a != 'submit') {
+            if (is_array($b['name'])) {
+                $pa[] = $a;
+                $b['name'] = array_unique(array_values(array_filter($b['name'])));
+                $b['tmp_name'] = array_unique(array_values(array_filter($b['tmp_name'])));
+                for ($i = 0; $i < count($b['name']); $i++) {
+                    $b['name'][$i] = time() . '-' . $b['name'][$i];
+                    move_uploaded_file($b['tmp_name'][$i], 'files/' . $b['name'][$i]);
+                }
+                $pb[] = implode(',', $b['name']);
+            } elseif (is_array($b)) {
+                $pa[] = $a;
+                $b['name'] = time() . '-' . $b['name'];
+                move_uploaded_file($b['tmp_name'], 'files/' . $b['name']);
+                $pb[] = $b['name'];
+            }
+        }
+    }
+    foreach ($_POST as $a => $b) {
+        if ($a != 'submit') {
+            if (is_array($b)) {
+                $pa[] = $a;
+                unset($pb1);
+                for ($i = 0; $i < count($b); $i++) {
+                    $b[$i] = mysql_escape_string($b[$i]);
+                    if (strpos($a, "time") || $a == 'time' || strpos($a, "datetime") || $a == 'datetime' || strpos($a, "date") || $a == 'date')
+                        $pb1[] = dmy2mysql($b[$i]);
+                    else
+                        $pb1[] = $b[$i];
+                }
+                $pb[] = implode(',', $pb1);
+            }
+            else {
+                $pa[] = $a;
+                if (strpos($a, "time") || $a == 'time' || strpos($a, "datetime") || $a == 'datetime' || strpos($a, "date") || $a == 'date')
+                    $pb[] = dmy2mysql($b);
+                else
+                    $pb[] = mysql_escape_string($b);
+            }
+        }
+    }
+
+    $sql.=implode('`,`', $pa) . "`) values('" . implode("','", $pb) . "')";
+    $q = mysql_query($sql) or die(mysql_error());
+
+
+    if ($q)
+        echo "<script>alert('New Page Created'); window.location='index.php?p=viewpage';</script>";
+}
+?>
+<div class="container-fluid main-content">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="widget-container fluid-height clearfix">
+                <div class="heading">
+                    <i class="fa fa-table"></i>Add New  Page
+                </div>
+
+                <div class="widget-content padded">
+
+                    <form action="#" class="form-horizontal" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Name</label>
+                            <div class="col-md-7">
+                                <input class="form-control"  type="text" name="name"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Page Link Place:</label>
+                            <div class="col-md-7">
+                                <select class="form-control" name="place">
+                                    <option >--Select--</option>
+                                    <option>Home Page Content</option>
+                                    <option>Home Page Thumb Image</option>
+                                    <option>Footer Menu</option>
+
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Url</label>
+                            <div class="col-md-7">
+                                <input class="form-control" placeholder="" type="text" name="url"/>
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Sort</label>
+                            <div class="col-md-7">
+                                <input class="form-control" placeholder="" type="text" name="sort"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Url Title</label>
+                            <div class="col-md-7">
+                                <input class="form-control" type="text" name="title"/>
+                            </div>
+                        </div>    
+
+
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Short Description</label>
+                            <div class="col-md-7">
+                                <textarea class="form-control" rows="3" name="shortde"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Detail</label>
+                            <div class="col-md-7">
+                <!--                <textarea class="form-control ckeditor" ro  ws="3" name="detail" ></textarea>-->
+                                <textarea id="editor1" name="detail" rows="10" cols="80"></textarea>
+                                <script type="text/javascript">
+                                    var editor = CKEDITOR.replace( 'editor1', {
+                                        filebrowserBrowseUrl : 'new/ckfinder/ckfinder.html',
+                                        filebrowserImageBrowseUrl : 'new/ckfinder/ckfinder.html?type=Images',
+                                        filebrowserFlashBrowseUrl : 'new/ckfinder/ckfinder.html?type=Flash',
+                                        filebrowserUploadUrl : 'new/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+                                        filebrowserImageUploadUrl : 'new/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+                                        filebrowserFlashUploadUrl : 'new/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+                                    });
+                                    CKFinder.setupCKEditor( editor, '../' );
+                                </script>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Image Upload</label>
+                            <div class="col-md-4">
+                                <div class="fileupload fileupload-new" data-provides="fileupload"><input type="hidden" value="" name="">
+                                    <div class="fileupload-new img-thumbnail" style="width: 200px; height: 150px;">
+                                        <img src="images/AAAAAA&text=no+image.gif">
+                                    </div>
+                                    <div class="fileupload-preview fileupload-exists img-thumbnail" style="width: 200px; max-height: 150px;"></div>
+                                    <div>
+                                        <span class="btn btn-default btn-file"><span class="fileupload-new">Select image</span><span class="fileupload-exists">Change</span><input type="file" name="image"/></span><a class="btn btn-default fileupload-exists" data-dismiss="fileupload" href="#">Remove</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Advertisement</label>
+                            <div class="col-md-4 more">
+                                <input type="file" class="form-control" name="advertisements[]" multiple=""/>
+                                <script>
+                                    function addmore(){
+                                        $('.more').append('<input class="form-control" name="advertisements[]" type="file" multiple=""/>')
+                                    }
+                                </script>
+                            </div>
+                            <button type="button" onclick="addmore()">Addmore</button>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Valuable Clients</label>
+                            <div class="col-md-4 more1">
+                                <input type="file" class="form-control" name="valuable[]" multiple=""/>
+                                <script>
+                                    function addmore(){
+                                        $('.more1').append('<input class="form-control" name="valuable[]" type="file" multiple=""/>')
+                                    }
+                                </script>
+                            </div>
+                            <button type="button" onclick="addmore()">Addmore</button>
+                        </div>
+
+                        <div class="form-group">
+
+                            <div class="col-md-7" style="text-align: right;">
+                                <button class="btn btn-primary" type="submit" name="submit">Submit</button><button class="btn btn-default-outline">Cancel            </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end DataTables Example -->
+</div>

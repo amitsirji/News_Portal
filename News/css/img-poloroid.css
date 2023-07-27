@@ -1,0 +1,61 @@
+@charset "utf-8";
+/* CSS Document */
+
+
+/* CSS3 Image Polaroids */
+
+img.polaroid {
+	display: inline;
+	float: right;
+	margin: 0 0 20px 20px;
+	-webkit-transition: -webkit-transform .15s linear;
+	-moz-transition: -moz-transform .15s linear;
+	transition: transform .15s linear;
+	-moz-transform: rotate(-2deg);
+	-webkit-transform: rotate(-2deg);
+	-o-transform: rotate(-2deg);
+	/*-ms-transform: rotate(-2deg);*/
+	transform: rotate(-2deg);
+	-webkit-box-shadow: 0px 3px 6px #bfbfbf;
+	-moz-box-shadow: 0px 3px 6px #bfbfbf;
+	box-shadow: 0px 3px 6px #bfbfbf;
+	padding: 10px;
+	border: 1px solid #CCC;
+	background: #ffffff; /* Old browsers */
+	background: -moz-linear-gradient(top, #ffffff 0%, #e5e5e5 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#e5e5e5)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #ffffff 0%,#e5e5e5 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #ffffff 0%,#e5e5e5 100%); /* Opera11.10+ */
+	background: -ms-linear-gradient(top, #ffffff 0%,#e5e5e5 100%); /* IE10+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */
+	background: linear-gradient(top, #ffffff 0%,#e5e5e5 100%); /* W3C */
+}
+
+img.polaroid.left {
+	float: left;
+	margin: 0 20px 20px 0;
+	-moz-transform: rotate(4deg);
+	-webkit-transform: rotate(4deg);
+	-o-transform: rotate(4deg);
+	/*-ms-transform: rotate(4deg);*/
+	transform: rotate(4deg);
+}
+
+	img.polaroid:hover {
+		-webkit-transition: -webkit-transform .15s linear;
+		-moz-transform: scale(1.15) rotate(0);
+		-webkit-transform: scale(1.15) rotate(0);
+		-o-transform: scale(1.15) rotate(0);
+		-ms-transform: scale(1.15) rotate(0);
+		transform: scale(1.15) rotate(0);
+		-webkit-box-shadow: 0 3px 6px #808080;
+		-moz-box-shadow: 0 3px 6px #808080;
+		box-shadow: 0 3px 6px #808080;
+		z-index: 5;
+	}
+
+/*/ CSS3 Image Polaroids */
+
+#rt-feature {
+	background: url("../images/body-shadow.png") repeat-y scroll 50% 0 transparent !important;
+}
